@@ -1,14 +1,14 @@
 -- dim_customers must have the same number of rows as its staging counterpart
 -- Therefore return records where this isn't true to make the test fail
-select *
+SELECT *
 from (
-        select dim_cust.customer_id
-        from {{ ref('dim_customers') }} dim_cust
-            left join {{ ref('stg_customers') }} stg_cust on dim_cust.customer_id = stg_cust.customer_id
-        where stg_cust.customer_id is null
+        SELECT dim_cust.customer_id
+        FROM {{ ref('dim_customers') }} dim_cust
+        LEFT JOIN {{ ref('stg_customers') }} stg_cust ON dim_cust.customer_id = stg_cust.customer_id
+        WHERE stg_cust.customer_id IS null
         UNION ALL
-        select stg_cust.customer_id
-        from {{ ref('stg_customers') }} stg_cust
-            left join {{ ref('dim_customers') }} dim_cust on stg_cust.customer_id = dim_cust.customer_id
-        where dim_cust.customer_id is null
+        SELECT stg_cust.customer_id
+        FROM {{ ref('stg_customers') }} stg_cust
+        LEFT JOIN {{ ref('dim_customers') }} dim_cust ON stg_cust.customer_id = dim_cust.customer_id
+        WHERE dim_cust.customer_id IS null
     ) tmp
